@@ -9,12 +9,39 @@
 import UIKit
 
 class Daaman_GameViewController: UIViewController {
-
+    
+var theGameModel = Daaman_TicTacToeGame()
+    var gameIsOver = false
+    
+    @IBOutlet weak var whoIsNext: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
+    
+    
+    @IBAction func squareTouched(_ sender: UIButton) {
+        print("Buttons touched! but which one?" )
+        print(sender . tag)
+    
+    
+        if (sender.currentTitle == nil && !gameIsOver) {
+            sender.setTitle(theGameModel.whoseTurnIsIt, for: .normal)
+    theGameModel.playMove(sender . tag )
+            
+            if (theGameModel.checkIfGameOver()) {
+                whoIsNext.text = "Game Over!"
+                gameIsOver = true }
+            else {
+            whoIsNext.text = theGameModel.whoseTurnIsIt + "'s Turn"
+    
+    }
+        
+    }
+    }
+    
+    
     
 
     /*
