@@ -13,6 +13,8 @@ class Daaman_TableViewCell: UITableViewCell {
     @IBOutlet weak var win_loss_image: UIImageView!
     @IBOutlet weak var who_won: UILabel!
     @IBOutlet weak var date_played: UILabel!
+    
+    var cellData : CellData?
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

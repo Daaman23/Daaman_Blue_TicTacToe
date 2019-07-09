@@ -85,8 +85,8 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date Played" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ftp-27-feP">
-                                            <rect key="frame" x="322" y="32" width="92" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date Played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ftp-27-feP">
+                                            <rect key="frame" x="205" y="32" width="209" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -98,6 +98,7 @@
                                     <outlet property="date_played" destination="ftp-27-feP" id="A0H-gC-G0p"/>
                                     <outlet property="who_won" destination="vKl-jF-PKk" id="Uz8-ng-3E3"/>
                                     <outlet property="win_loss_image" destination="UE9-7P-bmm" id="UYZ-fo-0Q3"/>
+                                    <segue destination="0ev-aK-QfB" kind="show" identifier="pastGame" id="8Fk-gY-tUx"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -110,7 +111,7 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="VR9-zo-5VS"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="XQp-yP-Omq">
                             <connections>
-                                <segue destination="0ev-aK-QfB" kind="show" id="3J7-eY-lGj"/>
+                                <segue destination="0ev-aK-QfB" kind="show" identifier="newGame" id="3J7-eY-lGj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -280,4 +281,7 @@
         <image name="Blue_Grid" width="160" height="160"/>
         <image name="Blue_win" width="64" height="64"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="3J7-eY-lGj"/>
+    </inferredMetricsTieBreakers>
 </document>

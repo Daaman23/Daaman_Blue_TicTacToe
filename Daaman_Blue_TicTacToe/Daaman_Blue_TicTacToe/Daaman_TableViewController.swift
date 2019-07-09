@@ -9,9 +9,12 @@
 import UIKit
 
 class Daaman_TableViewController: UITableViewController {
-
+    var numGames = 0
+    var cellDataArray : Array<CellData> = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadData()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -19,7 +22,25 @@ class Daaman_TableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+        tableView.reloadData()
+    }
+    func loadData() {
+        cellDataArray = Array<CellData>()
+        numGames = UserDefaults.standard.integer(forKey: Constants.NUMBER_OF_GAMES_PLAYED)
+        
+        for i in  (1..<numGames + 1).reversed(){
+            let game_whoWon = UserDefaults.standard.string(forKey: Constants.WHO_WON + String(i))!
+            let game_timeStamp = UserDefaults.standard.double( forKey: Constants.GAME_TIMESTAMP + String(i))
+            
+            let order_of_moves = UserDefaults.standard.array(forKey: Constants.ORDER_OF_MOVES + String(i)) as! [Int]
+            let  newCellData = CellData(whoWon: game_whoWon, timeStamp: game_timeStamp, orderOfMoves: order_of_moves)
+            
+            cellDataArray.append(newCellData)
+        }
+    }
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -29,7 +50,7 @@ class Daaman_TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 5
+        return numGames
     }
 
     
@@ -40,9 +61,32 @@ class Daaman_TableViewController: UITableViewController {
 
         // Configure the cell...
         
-        cell.win_loss_image.image = UIImage(named: "Blue_win")
-        cell.who_won.text = "X Won"
-        cell.date_played.text = "Today"
+        // provide right info
+        
+        let cellNumber = indexPath.row
+        
+        let thisCellData = cellDataArray[cellNumber]
+        cell.cellData = thisCellData
+        if(thisCellData.whoWon == "X") {
+            cell.win_loss_image.image = UIImage(named: "Blue_win")
+            cell.who_won.text = "X WON!"
+        } else if (thisCellData.whoWon == "0"){
+            cell.win_loss_image.image = UIImage(named: "Blue_loss")
+            cell.who_won.text = "O WON!"
+        } else {
+    cell.win_loss_image.image = UIImage(named: "Blue_loss")
+    cell.who_won.text = "Draw"
+    }
+       let gameTimeStamp = thisCellData.timeStamp
+        
+        let gameDate = Date(timeIntervalSince1970: gameTimeStamp)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        
+        
+        cell.date_played.text = dateFormatter.string(from: gameDate)
 
         return cell
     }
@@ -83,14 +127,37 @@ class Daaman_TableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        
+        print("prepare for segue \(segue.identifier!)")
+        
+        if (segue.identifier != "pastGame") {
+            return
+        }
+        
+        let destinationViewController = segue.destination as!
+        Daaman_GameViewController
+        
+        destinationViewController.isPastGame = true
+        
+        //destinationViewController.orderOfMoves
+        
+        let thisCell = sender as! Daaman_TableViewCell
+        let thisCellData = thisCell.cellData
+        
+        destinationViewController.orderOfMoves = thisCellData?.orderOfMoves
+        
+        }
     }
-    */
 
+struct CellData {
+    var whoWon : String
+    var timeStamp : Double
+    var orderOfMoves : [Int]
 }

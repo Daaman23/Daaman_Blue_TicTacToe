@@ -13,36 +13,67 @@ class Daaman_GameViewController: UIViewController {
 var theGameModel = Daaman_TicTacToeGame()
     var gameIsOver = false
     
+    
+    var isPastGame = false
+    var orderOfMoves : [Int]?
+    
+    
     @IBOutlet weak var whoIsNext: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        if (isPastGame) {
+            print("it is a past game")
+            theGameModel.isPastGame = true
+            var delay = 0.0
+            
+            for move in orderOfMoves! {
+                delay += 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {self.playTheMove(move)})
+                
+            }
+            
+        } else {
+            print("it is a new game")
+        }
     }
     
     
     @IBAction func squareTouched(_ sender: UIButton) {
+        if (isPastGame){
+            return
+        }
         print("Buttons touched! but which one?" )
         print(sender . tag)
     
     
         if (sender.currentTitle == nil && !gameIsOver) {
-            sender.setTitle(theGameModel.whoseTurnIsIt, for: .normal)
-    theGameModel.playMove(sender . tag )
-            
-            if (theGameModel.checkIfGameOver()) {
-                whoIsNext.text = "Game Over!"
-                gameIsOver = true }
-            else {
-            whoIsNext.text = theGameModel.whoseTurnIsIt + "'s Turn"
-    
-    }
+           playTheMove(sender.tag)
         
     }
     }
     
+    func playTheMove(_ tag: Int ) {
+        let currentButton = view.viewWithTag(tag) as! UIButton
+        currentButton.setTitle(theGameModel.whoseTurnIsIt, for: .normal)
+        theGameModel.playMove(tag)
+        checkGameStatus()
+    }
     
-    
+    func checkGameStatus() {
+    if (theGameModel.checkIfGameOver()) {
+    if (theGameModel.gameWinner == "Draw") {
+    whoIsNext.text = "Draw!"
+    } else {
+    whoIsNext.text = theGameModel.gameWinner + "Won!"
+    }
+    gameIsOver = true
+    }else {
+    whoIsNext.text = theGameModel.whoseTurnIsIt + "'s Turn"
+    }
+    }
 
     /*
     // MARK: - Navigation

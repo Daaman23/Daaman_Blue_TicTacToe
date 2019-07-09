@@ -13,7 +13,11 @@ class Daaman_TicTacToeGame {
     var whoseTurnIsIt = "X"
     var squareContents = Array(repeating: "", count: 9)
     var numberOfMovesPlayed = 0
+    var gameWinner = ""
     
+    var isPastGame = false
+    
+    var orderPlayed = [Int]()
     let winningCombos = [
     [0, 1, 2],
     [3, 4, 5],
@@ -26,6 +30,9 @@ class Daaman_TicTacToeGame {
     
     func playMove(_ tag: Int) {
         numberOfMovesPlayed += 1
+        
+        orderPlayed.append(tag)
+        
         let location = tag - 1
         if (whoseTurnIsIt == "X") {
             // x Marked
@@ -45,6 +52,7 @@ class Daaman_TicTacToeGame {
             if (squareContents[winningCombo[0]] == checkFor
             && squareContents[winningCombo[1]] == checkFor
                 && squareContents[winningCombo[2]] == checkFor) {
+                gameWinner = checkFor
                 saveGame(whoWon: checkFor)
                 return true
                 
@@ -54,13 +62,18 @@ class Daaman_TicTacToeGame {
         }
         
         if (numberOfMovesPlayed == 9) {
+            gameWinner = "Draw"
             saveGame(whoWon: "Draw")
+            return true
         }
         return false
         
     }
     // save game
     func saveGame(whoWon: String) {
+        if (isPastGame){
+            return
+        }
         let numberOfGamesPlayed =
             UserDefaults.standard.integer(forKey: Constants.NUMBER_OF_GAMES_PLAYED) + 1
         UserDefaults.standard.set(numberOfGamesPlayed, forKey:
@@ -68,10 +81,24 @@ class Daaman_TicTacToeGame {
         
         UserDefaults.standard.set(whoWon, forKey: Constants.WHO_WON +
         String(numberOfGamesPlayed))
+        
+        let currentTime = Date().timeIntervalSince1970
+        
+        UserDefaults.standard.set(currentTime, forKey: Constants.GAME_TIMESTAMP + String(numberOfGamesPlayed))
+        
+        UserDefaults.standard.set(orderPlayed, forKey: Constants.ORDER_OF_MOVES + String(numberOfGamesPlayed))
+        
+        print (numberOfGamesPlayed)
+        print (whoWon)
+        print (currentTime)
+        
+        
     }
     
 }
 struct Constants {
     static let NUMBER_OF_GAMES_PLAYED = "num_games"
     static let WHO_WON = "who_won"
+    static let GAME_TIMESTAMP = "game_timestamp_"
+    static let ORDER_OF_MOVES =  "order_of_moves"
 }
